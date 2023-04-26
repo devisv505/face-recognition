@@ -23,7 +23,7 @@ class Recognizer(object):
         img_cnt = len(self.filenames)
 
         for filename in self.filenames:
-            fn = "./static/images/" + filename
+            fn = "~/face-recognition/static/images/" + filename
             img_count = img_count + 1
             image_data = face_recognition.load_image_file(fn)
             face_locations = face_recognition.face_locations(image_data)
