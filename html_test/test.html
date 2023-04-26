@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+  <script>
+    /* capture vide from webcam */
+var video = document.createElement('video');
+video.setAttribute('autoplay', '');
+video.setAttribute('muted', '');
+video.setAttribute('playsinline', '');
+document.body.appendChild(video);
+var constraints = {
+  audio: false,
+  video: {
+    width: { min: 1280 },
+    height: { min: 720 }
+  }
+};
+navigator.mediaDevices.getUserMedia(constraints)
+  .then(function(stream) {
+    video.srcObject = stream;
+  })
+  .catch(function(err) {
+    /* handle the error */
+  });
+
+  var ws = new WebSocket('ws://localhost:8080/');
+ws.binaryType = 'arraybuffer';
+ws.onopen = function() {
+  var interval = setInterval(function() {
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+    ws.send(imageData.data.buffer);
+  }, 1000);
+};
+ws.onclose = function() {
+  clearInterval(interval);
+};
+  </script>
+</body>
+</html>
